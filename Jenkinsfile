@@ -2,7 +2,7 @@
 
 library identifier: 'jenkins-shared-library@master', retriever: modernSCM(
     [$class: 'GitSCMSource',
-    remote: 'https://github.com/emmanuelfontem/Deploy-to-EC2.git',
+    remote: 'https://github.com/emmanuelfontem/jenkins-shared-library.git',
     credentialsID: 'github-credentials'
     ]
 )
@@ -48,7 +48,7 @@ pipeline {
                     echo 'deploying docker image to EC2...'
 
                     def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME}"
-                    def ec2Instance = "ec2-user@18.184.54.160"
+                    def ec2Instance = "ec2-user@3.17.141.116"
 
                     sshagent(['ec2-server-key']) {
                         sh "scp server-cmds.sh ${ec2Instance}:/home/ec2-user"
