@@ -1,11 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-  backend "s3" {
-    bucket = "myapp-tf-s3-bucket"
-    key = "myapp/state.tfstate"
-    region = "eu-central-1"
-  }
-}
 
 provider "aws" {
   region = var.region
@@ -111,5 +103,9 @@ resource "aws_instance" "myapp-server" {
 
 output "ec2-public_ip" {
   value = aws_instance.myapp-server.public_ip
+}
+
+output "server_created" {
+  value = true
 }
 
