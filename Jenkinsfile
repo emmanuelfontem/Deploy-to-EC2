@@ -3,7 +3,7 @@
 library identifier: 'jenkins-shared-library@main', retriever: modernSCM(
     [$class: 'GitSCMSource',
     remote: 'https://github.com/emmanuelfontem/jenkins-shared-library.git',
-    credentialsID: 'github-credentials'
+    credentialsId: 'github-credentials'
     ]
 )
 
@@ -109,8 +109,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                         sh 'git remote set-url origin https://$USER:$PASS@github.com/emmanuelfontem/Deploy-to-EC2.git'
                         sh 'git add .'
-                        sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:jenkins-jobs'
+                        sh 'git diff --cached --quiet || commit -m "ci: version bump"'
+                        sh 'git push origin HEAD:jenkinsfile-sshagent'
                     }
                 }
             }
