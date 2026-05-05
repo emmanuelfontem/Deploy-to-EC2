@@ -109,7 +109,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                         sh 'git remote set-url origin https://$USER:$PASS@github.com/emmanuelfontem/Deploy-to-EC2.git'
                         sh 'git add .'
-                        sh 'git diff --cached --quiet || commit -m "ci: version bump"'
+                        sh 'git diff --cached --quiet || git commit -m "ci: version bump"'
                         sh 'git push origin HEAD:jenkinsfile-sshagent'
                     }
                 }
