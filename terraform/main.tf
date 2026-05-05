@@ -1,3 +1,11 @@
+terraform {
+  required_version = ">= 0.12"
+  backend "s3" {
+    bucket = "my-bucket-name"
+    key = "myapp/state.tfstate"
+  }
+  
+}
 
 provider "aws" {
   region = var.region
