@@ -52,7 +52,21 @@ pipeline {
             script {
                 dir('terraform') {
                   sh "terraform init"
-                  sh "terraform apply --auto-approve"
+
+                  def tfOutput = sh(
+                    script: "terraform apply --auto-approve",
+                    returnStdout: true
+                  ).trim()
+
+                  echo tfOutput
+
+                  // check if Terraform created or modified resources
+                  if (tfOutput.contains("Apply complete! Resources: 0 added, 0 changed, 0 destroyed.")) {
+                    env.NEW_SERVER_CREATED = "false"
+                  } else {
+                    env.NEW_SERVER_CREATED = "true"
+                  }
+
                   EC2_PUBLIC_IP = sh(
                     script: "terraform output ec2-public_ip",
                     returnStdout: true
@@ -67,15 +81,12 @@ pipeline {
           }  
             steps {
                 script {
-                    echo 'checking if server was newly created....'
-
-                    def isNewServer = env.SERVER_CREATED ?: "true"
-
-                    if (isNewServer == "true") {
-                        echo "new server detected waiting for initialization"
+                    
+                    if (env.NEW_SERVER_CREATED == "true") {
+                        echo "New EC2 instance detected. Waiting for initialization..."
                         sleep(time: 90, unit: "SECONDS")
-                    } else {
-                        echo "server already exists skipping wait"
+                    }   else {
+                        echo "EC2 already exists. Skipping wait time." 
                     }
                     
                     echo 'deploying docker image to EC2...'
